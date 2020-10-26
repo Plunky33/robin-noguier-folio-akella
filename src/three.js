@@ -1,85 +1,95 @@
-import * as THREE from 'three'
-import OrbitControls from 'orbit-controls-es6'
-
-import vert from './shaders/shader.vert'
-import frag from './shaders/shader.frag'
+import * as THREE from "three";
+import vert from "./shaders/shader.vert";
+import frag from "./shaders/shader.frag";
 
 // Initial HMR Setup
 if (module.hot) {
-    module.hot.accept()
+  module.hot.accept();
 
-    module.hot.dispose(() => {
-        document.querySelector('canvas').remove()
-        renderer.forceContextLoss()
-        renderer.context = null
-        renderer.domElement = null
-        renderer = null
-        cancelAnimationFrame(animationId)
-        removeEventListener('resize', resize)
-    })
+  module.hot.dispose(() => {
+    document.querySelector("canvas").remove();
+    renderer.forceContextLoss();
+    renderer.context = null;
+    renderer.domElement = null;
+    renderer = null;
+    cancelAnimationFrame(animationId);
+    removeEventListener("resize", resize);
+  });
 }
 
-// Three Scene
-let scene, camera, renderer, animationId, controls
-let geometry, material, mesh
+// let camera, scene, renderer;
+// let geometry, material, mesh;
 
-function init() {
-    scene = new THREE.Scene()
+// init();
+// animate();
 
-    camera = new THREE.PerspectiveCamera(
-        75,
-        window.innerWidth / window.innerHeight,
-        1,
-        10000
-    )
-    camera.position.z = 1000
+// function init() {
+//   camera = new THREE.PerspectiveCamera(
+//     70,
+//     window.innerWidth / window.innerHeight,
+//     0.01,
+//     10
+//   );
+//   camera.position.z = 1;
 
-    controls = new OrbitControls(camera)
+//   scene = new THREE.Scene();
 
-    geometry = new THREE.BoxGeometry(200, 200, 200)
-    material = new THREE.RawShaderMaterial({
-        vertexShader: vert,
-        fragmentShader: frag
-    })
+//   geometry = new THREE.BoxGeometry(0.2, 0.2, 0.2);
+//   material = new THREE.MeshNormalMaterial();
 
-    mesh = new THREE.Mesh(geometry, material)
-    scene.add(mesh)
+//   mesh = new THREE.Mesh(geometry, material);
+//   scene.add(mesh);
 
-    for (let i = -5; i <= 5; i++) {
-        const geometry = new THREE.BoxGeometry(200, 200, 200)
-        const material = new THREE.MeshBasicMaterial({
-            color: 0xffffff,
-            wireframe: true
-        })
+//   renderer = new THREE.WebGLRenderer({ antialias: true });
+//   renderer.setSize(600, 450);
+//   document.getElementById("container").appendChild(renderer.domElement);
+// }
 
-        const mesh = new THREE.Mesh(geometry, material)
-        scene.add(mesh)
-        mesh.position.x = i * 400
-    }
+// function animate() {
+//   requestAnimationFrame(animate);
 
-    renderer = new THREE.WebGLRenderer({ antialias: true })
-    renderer.setSize(window.innerWidth, window.innerHeight)
+//   mesh.rotation.x += 0.01;
+//   mesh.rotation.y += 0.02;
 
-    document.body.appendChild(renderer.domElement)
+//   renderer.render(scene, camera);
+// }
+
+// export default class Sketch {
+//   constructor() {
+let renderer, camera, scene;
+let time, geometry, material, mesh;
+
+renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(600, 450);
+document.getElementById("container").appendChild(renderer.domElement);
+
+camera = new THREE.PerspectiveCamera(
+  70,
+  window.innerWidth / window.innerHeight,
+  0.01,
+  10
+);
+camera.position.z = 1;
+scene = new THREE.Scene();
+addMesh();
+time = 0;
+render();
+
+function addMesh() {
+  geometry = new THREE.PlaneBufferGeometry(1, 1);
+  // material = new THREE.MeshBasicMaterial({ color: 0x7777ff });
+  material = new THREE.MeshNormalMaterial({ side: THREE.DoubleSide });
+
+  mesh = new THREE.Mesh(geometry, material);
+  scene.add(mesh);
 }
 
-function animate() {
-    animationId = requestAnimationFrame(animate)
-
-    mesh.rotation.x += 0.04
-    mesh.rotation.y += 0.02
-
-    renderer.render(scene, camera)
+function render() {
+  console.log("Hello from three.js! YAY!");
+  time++;
+  mesh.rotation.x += 0.01;
+  mesh.rotation.y += 0.02;
+  console.log(time);
+  renderer.render(scene, camera);
+  window.requestAnimationFrame(render.bind(this));
 }
-
-init()
-animate()
-
-// Event listeners
-function resize() {
-    camera.aspect = innerWidth / innerHeight
-    camera.updateProjectionMatrix()
-    renderer.setSize(innerWidth, innerHeight)
-}
-
-addEventListener('resize', resize)
