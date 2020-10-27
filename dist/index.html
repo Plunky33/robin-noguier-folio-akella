@@ -16,19 +16,21 @@
             height: 100px;
             width: 100px;
             position: absolute;
-            background: fuchsia;
+			background: fuchsia;
+			z-index: 100
 		}
 		#container {
 			width: 100vw;
 			height: 100vh;
 			position: fixed;
-			top: 20%;
-			left: 50%;
-			z-index: 1000;
+			top: 0;
+			left: 0;
+			z-index: -1;
+			pointer-events: none;
 		}
-		#wrap {
+		/* #wrap {
 			z-index: 100;
-		}
+		} */
     </style>
 </head>
 <body>
@@ -53,7 +55,7 @@
 	<div id="block"></div>
 	<div id="container"></div>
 
-	<script src="./js/app.js"></script>
+	<!-- <script src="../src/app.js"></script> -->
 	<script src="./js/three.bundle.js"></script>
 	
 	

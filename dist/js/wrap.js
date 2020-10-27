@@ -22,7 +22,7 @@ function raf() {
   });
 
   rounded = Math.round(position);
-  // console.log(position);
+  //   console.log(position);
 
   let diff = rounded - position;
 
@@ -33,4 +33,5 @@ function raf() {
   window.requestAnimationFrame(raf);
 }
 
-raf();
+// raf();
+export { raf };
