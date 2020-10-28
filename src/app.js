@@ -1,4 +1,3 @@
-import Sketch from "../dist/js/sketch.js";
 import { raf } from "../dist/js/wrap.js";
 
 // Initial HMR Setup
@@ -15,9 +14,5 @@ if (module.hot) {
     removeEventListener("resize", resize);
   });
 }
-
-let sketch = new Sketch({
-  dom: document.getElementById("container"),
-});
 
 raf();

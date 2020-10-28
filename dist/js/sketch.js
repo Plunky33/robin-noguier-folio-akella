@@ -2,6 +2,8 @@ import * as THREE from "three";
 import vertex from "../js/shaders/vertex.glsl";
 import fragment from "../js/shaders/fragment.glsl";
 
+import { TimelineMax } from "gsap";
+
 export default class Sketch {
   constructor(options) {
     this.scene = new THREE.Scene();
@@ -38,6 +40,7 @@ export default class Sketch {
     this.setupResize();
     this.materials = [];
     this.meshes = [];
+    this.groups = [];
     this.handleImages();
   }
 
@@ -46,7 +49,11 @@ export default class Sketch {
     images.forEach((im, i) => {
       let mat = this.material.clone();
       this.materials.push(mat);
+      let group = new THREE.Group();
       mat.uniforms.texture1.value = new THREE.Texture(im);
+      mat.uniforms.texture1.value.generateMipmaps = false; // add for clear images
+      mat.uniforms.texture1.value.minFilter = THREE.LinearFilter; // add for clear images
+
       mat.uniforms.texture1.value.needsUpdate = true;
 
       // mat.wireframe = true;
@@ -54,10 +61,15 @@ export default class Sketch {
       console.log("Hello from handleImages!");
       let geo = new THREE.PlaneBufferGeometry(1.5, 1, 20, 20);
       let mesh = new THREE.Mesh(geo, mat);
-      this.scene.add(mesh);
+      group.add(mesh);
+      this.groups.push(group);
+      this.scene.add(group);
       this.meshes.push(mesh);
       mesh.position.y = i * 1.2;
-      mesh.rotation.y = -0.05;
+
+      group.rotation.y = -0.5;
+      group.rotation.x = -0.2;
+      group.rotation.z = -0.1;
     });
   }
 
@@ -100,7 +112,7 @@ export default class Sketch {
       side: THREE.DoubleSide,
       uniforms: {
         time: { type: "f", value: 0 },
-        distance: { type: "f", value: 0 },
+        distanceFromCenter: { type: "f", value: 0 },
         texture1: { type: "t", value: null },
         resolution: { type: "v4", value: new THREE.Vector4() },
         uvRate1: {
@@ -108,7 +120,7 @@ export default class Sketch {
         },
       },
       // wireframe: true,
-      // transparent: true,
+      transparent: true,
       vertexShader: vertex,
       fragmentShader: fragment,
     });
